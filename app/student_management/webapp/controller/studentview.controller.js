@@ -2,29 +2,29 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/m/MessageToast",
     "sap/m/MessageBox"
-], (Controller,MessageToast,MessageBox) => {
+], (Controller, MessageToast, MessageBox) => {
     "use strict";
 
     return Controller.extend("com.studentmanagement.studentmanagement.controller.studentview", {
         onInit() {
         },
         // onCreate: function (evt) {
-		// 	MessageToast.show(evt.getSource().getId() + " Pressed");
-		// },
+        // 	MessageToast.show(evt.getSource().getId() + " Pressed");
+        // },
         async onCreate() {
             // create dialog lazily
             this.oDialog ??= await this.loadFragment({
                 name: "com.studentmanagement.studentmanagement.view.createDialog"
             });
-        
+
             this.oDialog.open();
         },
         async onUpdate() {
             const oTable = this.byId("student_table");
             const iIndex = oTable.getSelectedIndex();
             if (iIndex === -1) {
-            sap.m.MessageToast.show("Please select a row");
-            return;
+                sap.m.MessageToast.show("Please select a row");
+                return;
             }
             // Get selected row context (OData V4)
             const oCtx = oTable.getContextByIndex(iIndex);
@@ -32,7 +32,7 @@ sap.ui.define([
             // Create JSON model for editing (decoupled from OData)
             const oData = oCtx.getObject();
             const oEditModel = new sap.ui.model.json.JSONModel(oData);
-             this.getView().setModel(oEditModel, "editModel");
+            this.getView().setModel(oEditModel, "editModel");
             // create dialog lazily
             this.pDialog ??= await this.loadFragment({
                 name: "com.studentmanagement.studentmanagement.view.updateDialog"
@@ -47,53 +47,55 @@ sap.ui.define([
             var email = this.getView().byId("email").getValue();
             var age = this.getView().byId("age").getValue();
             var createdat = this.getView().byId("createdat").getValue();
-            var payload = { ID: id, 
-                            age: age, 
-                            createdAt: createdat, 
-                            email: email, 
-                            firstName: firstname, 
-                            lastName: lastname };
+            var payload = {
+                ID: id,
+                age: age,
+                createdAt: createdat,
+                email: email,
+                firstName: firstname,
+                lastName: lastname
+            };
             const oTable = this.byId("student_table");
             const oBinding = oTable.getBinding("rows");
             oBinding.create(
                 payload
             );
-           this.onCloseDialog();         
-		},
-         onCloseDialog() {
-			// note: We don't need to chain to the pDialog promise, since this event handler
-			// is only called from within the loaded dialog itself.
-           this.getView().byId("student_id").setValue("");
-           this.getView().byId("firstname").setValue("");
-           this.getView().byId("lastname").setValue("");
-           this.getView().byId("email").setValue("");
-           this.getView().byId("age").setValue("");
-           this.getView().byId("createdat").setValue("");
-		    this.byId("createDialog").close();
-		},
+            this.onCloseDialog();
+        },
+        onCloseDialog() {
+            // note: We don't need to chain to the pDialog promise, since this event handler
+            // is only called from within the loaded dialog itself.
+            this.getView().byId("student_id").setValue("");
+            this.getView().byId("firstname").setValue("");
+            this.getView().byId("lastname").setValue("");
+            this.getView().byId("email").setValue("");
+            this.getView().byId("age").setValue("");
+            this.getView().byId("createdat").setValue("");
+            this.byId("createDialog").close();
+        },
         onSaveEdit: function () {
-        const oEditData = this.getView().getModel("editModel").getData();
-         // Update via binding context (OData V4)
-        // this._oEditContext.setProperty("student_id", oEditData.student_id);
-        this._oEditContext.setProperty("firstName", oEditData.firstname);
-        this._oEditContext.setProperty("lastName", oEditData.lastname);
-        this._oEditContext.setProperty("email", oEditData.email);
-        this._oEditContext.setProperty("age", oEditData.age);
-        // this._oEditContext.setProperty("createdAt", Number(oEditData.createdat));
-        this.onCloseDialog_update();
-         sap.m.MessageToast.show("Student updated successfully");
+            const oEditData = this.getView().getModel("editModel").getData();
+            // Update via binding context (OData V4)
+            // this._oEditContext.setProperty("student_id", oEditData.student_id);
+            this._oEditContext.setProperty("firstName", oEditData.firstname);
+            this._oEditContext.setProperty("lastName", oEditData.lastname);
+            this._oEditContext.setProperty("email", oEditData.email);
+            this._oEditContext.setProperty("age", oEditData.age);
+            // this._oEditContext.setProperty("createdAt", Number(oEditData.createdat));
+            this.onCloseDialog_update();
+            sap.m.MessageToast.show("Student updated successfully");
         },
         onCloseDialog_update() {
-			// note: We don't need to chain to the pDialog promise, since this event handler
-			// is only called from within the loaded dialog itself.
-           this.getView().byId("student_id_up").setValue("");
-           this.getView().byId("firstname_up").setValue("");
-           this.getView().byId("lastname_up").setValue("");
-           this.getView().byId("email_up").setValue("");
-           this.getView().byId("age_up").setValue("");
-           this.getView().byId("createdat_up").setValue("");
-		    this.byId("updateDialog").close();
-		},
+            // note: We don't need to chain to the pDialog promise, since this event handler
+            // is only called from within the loaded dialog itself.
+            this.getView().byId("student_id_up").setValue("");
+            this.getView().byId("firstname_up").setValue("");
+            this.getView().byId("lastname_up").setValue("");
+            this.getView().byId("email_up").setValue("");
+            this.getView().byId("age_up").setValue("");
+            this.getView().byId("createdat_up").setValue("");
+            this.byId("updateDialog").close();
+        },
         onDeleteStudent: function () {
             const oTable = this.byId("student_table");
             const aSelectedIndices = oTable.getSelectedIndices();
@@ -114,6 +116,31 @@ sap.ui.define([
                         oTable.clearSelection();
                     }
                 }
+            });
+        },
+        onApproveStudent: function () {
+            var oTable = this.byId("student_table");
+            var aIndices = oTable.getSelectedIndices();
+
+            if (aIndices.length === 0) {
+                sap.m.MessageToast.show("Please select a student");
+                return;
+            }
+
+            var oContext = oTable.getContextByIndex(aIndices[0]);
+            var oModel = this.getView().getModel();
+            
+            // Use Namespace.ActionName format
+            var oAction = oModel.bindContext("StudentService.approveStudent(...)", oContext);
+            
+            oAction.execute().then(function () {
+                sap.m.MessageToast.show("Student Approved");
+
+                // refresh table data
+                oModel.refresh();
+            }).catch(function (oError) {
+                console.log(oError);
+                sap.m.MessageToast.show("Error approving student");
             });
         }
     });

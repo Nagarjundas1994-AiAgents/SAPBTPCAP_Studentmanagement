@@ -10,6 +10,7 @@
 			<Button text="Create" press="onCreate" />
 			<Button text="Update" press="onUpdate" />
 			<Button text="Delete" press="onDeleteStudent" />
+			<Button text="Approve" press="onApproveStudent" />
 			<table:Table
 				rows="{/Students}"
 				id="student_table"
@@ -52,6 +53,18 @@
 						<Label text="Created Date" />
 						<table:template>
 							<Text text="{createdAt}" wrapping="false" />
+						</table:template>
+					</table:Column>
+					<table:Column width="11rem">
+						<Label text="Action" />
+						<table:template>
+							<Button text="Approve" press="onApproveStudent" />
+						</table:template>
+					</table:Column>
+					<table:Column width="11rem">
+						<Label text="Status" />
+						<table:template>
+							<Text text="{status}" wrapping="false" />
 						</table:template>
 					</table:Column>
 				</table:columns>

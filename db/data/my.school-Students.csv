@@ -1,3 +1,13 @@
-firstName;lastName;email;age
-Vikas;Tiwari;vikas@test.com;25
-Amit;Sharma;amit@test.com;22
+firstName;lastName;email;age;status
+Vikas;Tiwari;vikas@test.com;25;New
+Amit;Sharma;amit@test.com;22;New
+Priya;Singh;priya@test.com;21;New
+Rahul;Verma;rahul@test.com;23;New
+Neha;Gupta;neha@test.com;24;New
+Rohit;Kumar;rohit@test.com;22;New
+Anjali;Das;anjali@test.com;20;New
+Rohan;Mehta;rohan@test.com;26;New
+Sneha;Jain;sneha@test.com;23;New
+Karan;Patel;karan@test.com;21;New
+Pooja;Shah;pooja@test.com;24;New
+Arjun;Reddy;arjun@test.com;22;New
